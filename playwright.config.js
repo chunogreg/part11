@@ -18,10 +18,10 @@ export default defineConfig({
   webServer: {
     command: "npm run start-prod",
     url: "http://localhost:5001",
-    timeout: 520 * 1000,
+    timeout: 220 * 1000,
     reuseExistingServer: !process.env.CI,
   },
-  timeout: 520 * 1000,
+  timeout: 220 * 1000,
 
   testDir: "./tests",
   /* Run tests in files in parallel */
@@ -53,11 +53,13 @@ export default defineConfig({
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
+      timeout: 120000,
     },
 
     {
       name: "webkit",
       use: { ...devices["Desktop Safari"] },
+      timeout: 120000,
     },
 
     /* Test against mobile viewports. */
