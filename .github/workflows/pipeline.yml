@@ -32,8 +32,12 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+      - name: Commit messages
+        env:
+          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
+        run: echo "$COMMIT_MESSAGES"
       - name: Trigger deployment
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
   tag_release:
     needs: [simple_deployment_pipeline]
@@ -44,10 +48,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
-      - name: Commit messages
-        env:
-          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
-        run: echo "$COMMIT_MESSAGES"
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.75.0
         env:
