@@ -69,7 +69,7 @@ jobs:
             **Job:** ${{ github.job }}
 
             [View Commit](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
-            [View Workflow Run]
+            [View Workflow Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
   tag_release:
     needs: [simple_deployment_pipeline]
