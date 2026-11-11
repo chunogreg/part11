@@ -33,7 +33,7 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
-  deploy:
+  simple_deployment_pipeline:
     needs: [build_and_test]
     runs-on: ubuntu-latest
     steps:
@@ -50,7 +50,7 @@ jobs:
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
 
   tag_release:
-    needs: [build_and_test, deploy]
+    needs: [build_and_test, simple_deployment_pipeline]
     if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
     runs-on: ubuntu-latest
     steps:
@@ -65,7 +65,7 @@ jobs:
           DEFAULT_BUMP: patch
 
   notify_success:
-    needs: [build_and_test, deploy, tag_release]
+    needs: [build_and_test, simple_deployment_pipeline, tag_release]
     if: success()
     runs-on: ubuntu-latest
     steps:
@@ -82,7 +82,7 @@ jobs:
             **Author:** ${{ github.actor }}
 
   notify_failure:
-    needs: [build_and_test, deploy, tag_release]
+    needs: [build_and_test, simple_deployment_pipeline, tag_release]
     if: failure()
     runs-on: ubuntu-latest
     steps:
